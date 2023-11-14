@@ -65,9 +65,9 @@ const updateProvider = async (req, res) => {
 
 const deleteProvider = async (req, res) => {
     try {
-        const { company_name } = req.params; 
+        const {company_name } = req.params; 
 
-        const deletedProvider = await Provider.findByIdAndDelete(company_name);
+        const deletedProvider = await Provider.findOneAndDelete({company_name: company_name} );
 
         if (!deletedProvider) {
             return res.status(404).send('Proveedor no encontrado');

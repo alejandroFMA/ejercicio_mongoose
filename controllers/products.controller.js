@@ -88,15 +88,15 @@ const updateProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
     try {
         const data = req.params
-        const id = data.company_name;
+        const id = data.title;
         if(id){
-            let result = await Product.deleteOne({company_name:id})
+            let result = await Product.deleteOne({title:id})
             if(result.deletedCount == 0)
-                res.status(400).json({message: `producto ${id} no encontrado`});
+                res.status(400).json({message: `Producto ${id} no encontrado`});
             else
-                res.status(200).json({message: "producto BORRADO", product:{data}})
+                res.status(200).json({message: "Producto borrado", product:{data}})
         }else{
-            res.status(400).json({message: "formato de producto erroneo"});
+            res.status(400).json({message: "Formato de producto erroneo"});
         }
     }
     catch (error) {

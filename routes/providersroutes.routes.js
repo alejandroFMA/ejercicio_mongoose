@@ -7,6 +7,6 @@ router.get("/:company_name?", providersApiController.getProvider);
 router.post("/", providersApiController.createProvider);
 router.put("/:company_name", providersApiController.createProvider);
 
-router.delete("/", providersApiController.deleteProvider)
+router.delete("/:company_name", providersApiController.deleteProvider)
 
 module.exports = router
