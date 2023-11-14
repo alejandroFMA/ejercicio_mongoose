@@ -1,0 +1,12 @@
+const express = require("express");
+const providersApiController = require("../controllers/providers.controller");
+const router = express.Router();
+
+
+router.get("/:company_name?", providersApiController.getProvider);
+router.post("/", providersApiController.createProvider);
+router.put("/:company_name", providersApiController.createProvider);
+
+router.delete("/", providersApiController.deleteProvider)
+
+module.exports = router

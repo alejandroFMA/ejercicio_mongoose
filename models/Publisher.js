@@ -14,6 +14,8 @@ const Publisher = mongoose.model('Publisher', publisherSchema);
 
 module.exports = Publisher;
 
+
+
 /*
 Para añadir nuevo juevo
 1- Buscar el ID que tiene SONY en mongoDB -> const pub = Publisher.find({company:Sony})

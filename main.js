@@ -1,72 +1,35 @@
+const express = require("express");
+const app = express();
+const port = 3000;
+const morgan = require("./middlewares/morgan");
+const productsRoutes = require("./routes/productsroutes.routes")
+const providersRoutes = require("./routes/providersroutes.routes");
 
 
+app.use(morgan(":method :host :status :param[id] - :response-time ms :body"));
+
+app.use(express.json());
+const mongoose = require("mongoose");
+mongoose
+  .connect("mongodb://localhost/mongo-exercise")
+  .then(() => console.log("Now connected to MongoDB!"))
+  .catch((err) => console.error("Something went wrong", err));
 
 
-const mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/mongo-exercise')
-    .then(() => console.log('Now connected to MongoDB!'))
-    .catch(err => console.error('Something went wrong', err));
+app.use("/api/products", productsRoutes);
+app.use("/api/providers", providersRoutes);
 
-const Provider = require('./models/providers.model');
-const Product = require('./models/products.model')
+const error404 = require("./middlewares/error404");
+app.use("*", error404);
 
-const productsRoutes = require('./routes/products.routes');
-const providersRoutes = require("./routes/providers.routes");
-app.use('/api/entries', entriesRoutes);
-app.use('/api/authors', authorsRoutes);
-
-async function createProvider(company_name, CIF, address, url_web) {
-        const provider = new Provider({
-            company_name,
-            CIF,
-            address,
-            url_web
-        });
-    
-        const result = await provider.save();
-        console.log(result)
-       
-}
-
-
-async function createProduct(title, price, description, company_name) {
-
-    const provider = await Provider.find({company_name});
-    const provider_id = provider[0]._id.toString();    
-    
-    if (!provider) {
-
-        console.log('Provider not found!');
-        return;
-    }
-
-    const product = new Product({
-        title,
-        price,
-        description,
-        provider:provider_id
-       
-    });
-
-    const result = await product.save();
-    console.log(result)
-       
-   
-}
-
-
-
-
-
-
-
-
+app.listen(port, () => {
+  console.log(`Server listening on http://localhost:${port}`);
+});
 
 /* https://vegibit.com/mongoose-relationships-tutorial/ */
 // Importar modelos
 // const Game = require('./models/Game');
 // const Publisher = require('./models/Publisher');
-
 
 // Listar juegos. Uso de populate()
 // async function listProducts() {
@@ -77,18 +40,7 @@ async function createProduct(title, price, description, company_name) {
 //     console.log(products);
 // }
 
-
 // listProducts();
-
-
-
-
-
-
-
-
-
-
 
 // createProduct('Montado jamon', 2.500, "Perfecto para la merienda", 'Teatro Marquina');
 // createProduct('Bocadillo Lomo', 5.60, "Consta de filete de lomo y queso", 'Bar Paco');
@@ -122,7 +74,7 @@ async function createProduct(title, price, description, company_name) {
 // async function createGame2(title, companyName) {
 
 //     const publisher = await Publisher.find({companyName});
-//     const publisher_id = publisher[0]._id.toString();    
+//     const publisher_id = publisher[0]._id.toString();
 
 //     const game = new Game({
 //         title,
@@ -142,16 +94,13 @@ async function createProduct(title, price, description, company_name) {
 //     console.log(games);
 // }
 
-
 // createPublisher('Nintendo', true, 'https://www.nintendo.com/');
 // createPublisher('Sony', true, 'https://www.sony.com/');
 // createPublisher('Sega', true, 'https://www.sega.com/');
 
-
 //createGame('Sonic the Hedgehog', '62ea5c8deb0cc4db1eb95366');
 //createGame('Donkey Kong', '62ea5c8deb0cc4db1eb95364');
 //createGame('Pro evolution Soccer 5', '623a1ee700bba314366df2e4');
-
 
 //Crear juego buscando primero el ID de Sony
 /* company.find({companyName:"Sony"}, function(err, docs) {
