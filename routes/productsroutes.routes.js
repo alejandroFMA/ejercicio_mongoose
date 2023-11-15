@@ -2,12 +2,12 @@ const express = require("express")
 const productsApiController = require("../controllers/products.controller")
 const router = express.Router()
 
-router.get("/:title?",productsApiController.getProducts)
+router.get("/:title?",productsApiController.getProducts);
 
-router.post("/", productsApiController.createProduct)
+router.post("/", productsApiController.createProduct);
 
-// router.update("/", productsApiController.updateProduct)
+router.put("/", productsApiController.updateProduct);
 
-router.delete("/:title", productsApiController.deleteProduct)
+router.delete("/:title", productsApiController.deleteProduct);
 
 module.exports = router

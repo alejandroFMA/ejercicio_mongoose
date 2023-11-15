@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const objectSchema = {
     company_name: { type: String, required: true, unique: true },
-    CIF: { type: String, required: true , unique: true}, //deberia ponerse unique:true
+    CIF: { type: String, required: true}, //deberia ponerse unique:true
     address:{ type: String, required: true },
     url_web: { type: String, required: true }
 };

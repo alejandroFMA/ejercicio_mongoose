@@ -6,9 +6,9 @@ const getProvider = async (req, res) => {
         let Providers;
 
         if (company_name) {
-            Providers = await Provider.find({ company_name  });
+            Providers = await Provider.find({ company_name  }).select(["-_id", "-__v"]);
         } else {
-            Providers = await Provider.find({});
+            Providers = await Provider.find({}).select(["-_id", "-__v"]);
         }
 
         res.status(200).json(Providers);
@@ -42,25 +42,34 @@ const createProvider = async(req, res) => {
 */
 
 const updateProvider = async (req, res) => {
-   try {
+    try {
+        const data = {};
         const { company_name, CIF, address, url_web } = req.body;
 
-        const updatedProvider = await Provider.findByIdAndUpdate(company_name, 
-            { company_name, CIF, address, url_web },
-            { new: true, runValidators: true });
+        
+        if (CIF) data.CIF = CIF;
+        if (address) data.address = address;
+        if (url_web) data.url_web = url_web;
 
-        if (!updatedProvider) {
+        const provider = await Provider.findOneAndUpdate(
+            { company_name: company_name }, 
+            { $set: data },
+            { new: true, runValidators: true }
+        );
+
+        if (!provider) {
             return res.status(404).send('Proveedor no encontrado');
         }
 
-        res.status(200).send({ 
-            message: `Proveedor actualizado: ${updatedProvider.company_name}`,
-            provider: updatedProvider 
+        res.status(200).send({
+            message: `Proveedor actualizado: ${provider.company_name}`,
+            provider: provider
         });
     } catch (error) {
         res.status(500).send(error.message);
     }
 };
+
 
 
 const deleteProvider = async (req, res) => {

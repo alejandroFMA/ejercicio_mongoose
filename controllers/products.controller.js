@@ -7,9 +7,9 @@ const getProducts = async(req, res) => {
         let Products;
 
         if (title) {
-            Products = await Product.find({ title  });
+            Products = await Product.find({title}).select(["-_id", "-__v"]);
         } else {
-            Products = await Product.find({});
+            Products = await Product.find({}).select(["-_id", "-__v"]).populate('provider', 'company_name -_id');
         }
 
         res.status(200).json(Products);
@@ -62,9 +62,8 @@ const createProduct = async (req, res) => {
 */ 
 const updateProduct = async (req, res) => {
     try {
-        const data = req.body; // El objeto completo del producto
-
-        const title  = productData;
+        const data = req.body; 
+        const title  = data.title;
 
         const result = await Product.findOneAndUpdate(
             { title: title }, 
@@ -94,7 +93,7 @@ const deleteProduct = async (req, res) => {
             if(result.deletedCount == 0)
                 res.status(400).json({message: `Producto ${id} no encontrado`});
             else
-                res.status(200).json({message: "Producto borrado", product:{data}})
+                res.status(200).json({message: `Producto borrado, ${id}`})
         }else{
             res.status(400).json({message: "Formato de producto erroneo"});
         }
